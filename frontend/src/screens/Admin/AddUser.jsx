@@ -11,7 +11,6 @@ const AddUser = () => {
     const initialValues={name:'',email:'',password:'',confirmPassword:''}
     const [formValues,setFormValues]=useState(initialValues)
     const [formErrors,setFormErrors]=useState('')
-  
       const navigate=useNavigate()
       const [adduser,{isLoading}]=useAdminadduserMutation()
   
@@ -19,7 +18,14 @@ const AddUser = () => {
         const {name,value}=e.target
         setFormValues({...formValues,[name]:value})
       }
-  
+       
+    //  const clear=()=>{
+    //   setFormValues({
+    //     ...formValues,confirmPassword:''
+    //   })
+    //  }
+
+
       const submitHndler = async (e) => {
         e.preventDefault();
         const errors=validate(formValues)
@@ -75,9 +81,10 @@ const AddUser = () => {
               name="confirmPassword"
               placeholder="Confirm Password"
               value={formValues.confirmPassword}
-              onChange={handleChange}
+              onChange={handleChange} 
             />
             <p style={{color:'red', fontSize: '12px'}}>{formErrors.confirmPassword}</p>
+            {/* <button onClick={clear}>click</button> */}
           </Form.Group>
          
          

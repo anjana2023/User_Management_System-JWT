@@ -6,6 +6,7 @@ import {toast} from 'react-toastify'
 import { useAdminupdateuserMutation } from '../../slices/Admin/adminApiSlice';
 import { useNavigate } from 'react-router-dom';
 import { validate } from '../../validations/userProfileVal';
+import axios from 'axios';
 
 const EditUser = () => {
   const initialValues={name:'',email:''}
@@ -30,7 +31,7 @@ const EditUser = () => {
     useEffect(()=>{
         const fetchUser = async () => {
             try {
-              const response = await fetch(`/api/admin/editUser?id=${id}`);
+              const response = await axios.get(`/api/admin/editUser?id=${id}`);
               const data = await response.json();
               if (response.ok) {
                 setUser(data.user)

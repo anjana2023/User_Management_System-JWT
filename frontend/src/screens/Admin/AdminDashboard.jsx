@@ -1,4 +1,5 @@
 import Table from 'react-bootstrap/Table';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { useAdmindeleteuserMutation } from '../../slices/Admin/adminApiSlice';
@@ -10,20 +11,14 @@ import { Col, Container, Form, Row, Card } from "react-bootstrap";
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [search,setSearch]=useState('')
-
   const navigate=useNavigate()
   const [deleteUser]=useAdmindeleteuserMutation()
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/admin/dashboard');
-        const data = await response.json();
-        if (response.ok) {
-          setUsers(data?.users);
-        } else {
-          console.error(data.message || 'Failed to fetch users');
-        }
+        const response = await axios.get('/api/admin/dashboard');
+        setUsers(response.data?.users || []);
       } catch (error) {
         console.error('Error fetching users:', error.message);
       }
@@ -36,7 +31,8 @@ const AdminDashboard = () => {
     try {
       await deleteUser({userId}).unwrap()
       toast.success("Deleted Successfully!");
-      navigate("/admin/dashboard")
+      // navigate("/admin/dashboard")
+      setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
     } catch (err) {
       toast.error(err?.data?.message || err?.error);
     }
@@ -52,13 +48,8 @@ const AdminDashboard = () => {
 
   const handleSearch=async()=>{
     try {
-      const response = await fetch(`/api/admin/dashboard?search=${search}`);
-      const data = await response.json();
-      if (response.ok) {
-        setUsers(data?.users);
-      } else {
-        console.error(data.message || 'Failed to fetch users');
-      }
+      const response = await axios.get(`/api/admin/dashboard?search=${search}`);
+      setUsers(response.data?.users || []);
     } catch (err) {
       console.error('Error searching users:', err.message);
     }
